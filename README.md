@@ -1,2 +1,5 @@
 # toolkit_config
-Configuration files for different tools with personalized settings
+This repository contains configuration files for different tools with personalized settings.
+
+# Install
+For easy install run setup_toolkit.sh
