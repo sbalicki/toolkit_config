@@ -87,10 +87,14 @@ cp .vimrc ~/
 
 ############ oh-my-zsh ############
 # Check if zsh is installed
-hash zsh >/dev/null 2>&1 || {
+hash zsh 2>/dev/null || {
   printf "${GREEN}Installing zsh\n${NORMAL}"
   sudo apt install zsh -y
 }
+if [ $(dpkg-query -W -f='${Status}' fonts-powerline 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+  printf "${GREEN}Installing powerline fonts\n${NORMAL}"
+  sudo apt-get install fonts-powerline -y;
+fi
 # Check if oh-my-zsh is installed
 ZSH=~/.oh-my-zsh
 if [ -d "$ZSH" ]; then
