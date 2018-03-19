@@ -77,7 +77,12 @@ fi
 if [ -f $VIM_AUTOLOAD/pathogen.vim ]; then
   printf "${BLUE}VIM Pathogen is already installed\n${NORMAL}"
 else
-  printf "${GREEN}Installing VIM Pathogen\n${NORMAL}"
+  # Check if curl is installed
+  if ! hash curl 2>/dev/null; then
+    printf "${GREEN}Installing curl\n${NORMAL}"
+    sudo apt install curl -y
+  fi
+# printf "${GREEN}Installing VIM Pathogen\n${NORMAL}"
   [ -d $VIM_AUTOLOAD ] || mkdir -p $VIM_AUTOLOAD
   curl -LSso $VIM_AUTOLOAD/pathogen.vim https://tpo.pe/pathogen.vim
 fi
