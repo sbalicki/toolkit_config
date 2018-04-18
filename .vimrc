@@ -44,3 +44,6 @@ set showmatch		" Show matching brackets.
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
+
+" Set path to ctags file
+set tags=./tags;,tags;

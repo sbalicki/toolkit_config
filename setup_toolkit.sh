@@ -86,6 +86,11 @@ else
   [ -d $VIM_AUTOLOAD ] || mkdir -p $VIM_AUTOLOAD
   curl -LSso $VIM_AUTOLOAD/pathogen.vim https://tpo.pe/pathogen.vim
 fi
+# Install ctags if not present
+if ! hash ctags 2>/dev/null; then
+  printf "${GREEN}Installing ctags\n${NORMAL}"
+  sudo apt install ctags -y
+fi
 # Copy configuration file
 printf "${YELLOW}Copying prepared .vimrc to ~/.vimrc\n${NORMAL}"
 cp .vimrc ~/
