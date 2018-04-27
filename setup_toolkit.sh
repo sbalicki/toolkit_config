@@ -19,6 +19,15 @@ else
   NORMAL=""
 fi
 
+########### Clang ###########
+if hash clang 2>/dev/null; then
+  printf "${BLUE}Clang is already installed\n${NORMAL}"
+else
+  # Install clang
+  printf "${GREEN}Installing clang\n${NORMAL}"
+  sudo apt install clang clang-format clang-tidy -y
+fi
+
 ############ GIT ############
 # Check if git is installed
 if hash git 2>/dev/null; then
