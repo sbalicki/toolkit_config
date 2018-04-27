@@ -47,3 +47,13 @@ endif
 
 " Set path to ctags file
 set tags=./tags;,tags;
+
+" Enable clang-format shortcuts
+map <C-K> :py3f $HOME/clang-format.py<cr>
+imap <C-K> <c-o>:py3f $HOME/clang-format.py<cr>
+" Enable clang-format autoformat on save
+function! Formatonsave()
+  let l:formatdiff = 1
+    py3f $HOME/clang-format.py
+endfunction
+autocmd BufWritePre *.h,*.cc,*.cpp call Formatonsave()

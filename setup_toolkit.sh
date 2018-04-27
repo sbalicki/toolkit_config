@@ -91,6 +91,10 @@ if ! hash ctags 2>/dev/null; then
   printf "${GREEN}Installing ctags\n${NORMAL}"
   sudo apt install ctags -y
 fi
+# Download clang-format.py for vim
+if [ ! -f $HOME/clang-format.py ]; then
+  curl -LSso $HOME/clang-format.py https://llvm.org/svn/llvm-project/cfe/trunk/tools/clang-format/clang-format.py
+fi
 # Copy configuration file
 printf "${YELLOW}Copying prepared .vimrc to ~/.vimrc\n${NORMAL}"
 cp .vimrc ~/
