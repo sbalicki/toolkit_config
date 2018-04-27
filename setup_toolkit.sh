@@ -58,7 +58,7 @@ if hash vim 2>/dev/null; then
 else
   # Install vim
   printf "${GREEN}Installing VIM\n${NORMAL}"
-  sudo apt install vim -y
+  sudo apt install vim vim-nox -y
 fi
 # Download and install solarized color theme with pathogen plugin
 VIM_BUNDLE=~/.vim/bundle
@@ -74,15 +74,16 @@ else
     exit 1
   }
 fi
+# Check if curl is installed - needed later
+if ! hash curl 2>/dev/null; then
+  printf "${GREEN}Installing curl\n${NORMAL}"
+  sudo apt install curl -y
+fi
+# Install VIM Pathogen
 if [ -f $VIM_AUTOLOAD/pathogen.vim ]; then
   printf "${BLUE}VIM Pathogen is already installed\n${NORMAL}"
 else
-  # Check if curl is installed
-  if ! hash curl 2>/dev/null; then
-    printf "${GREEN}Installing curl\n${NORMAL}"
-    sudo apt install curl -y
-  fi
-# printf "${GREEN}Installing VIM Pathogen\n${NORMAL}"
+  printf "${GREEN}Downloading VIM Pathogen\n${NORMAL}"
   [ -d $VIM_AUTOLOAD ] || mkdir -p $VIM_AUTOLOAD
   curl -LSso $VIM_AUTOLOAD/pathogen.vim https://tpo.pe/pathogen.vim
 fi
@@ -93,6 +94,7 @@ if ! hash ctags 2>/dev/null; then
 fi
 # Download clang-format.py for vim
 if [ ! -f $HOME/clang-format.py ]; then
+  printf "${GREEN}Downloading clang-format.py for VIM\n${NORMAL}"
   curl -LSso $HOME/clang-format.py https://llvm.org/svn/llvm-project/cfe/trunk/tools/clang-format/clang-format.py
 fi
 # Copy configuration file
