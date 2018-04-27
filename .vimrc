@@ -56,4 +56,4 @@ function! Formatonsave()
   let l:formatdiff = 1
     py3f $HOME/clang-format.py
 endfunction
-autocmd BufWritePre *.h,*.cc,*.cpp call Formatonsave()
+autocmd BufWritePre *.hpp,*.h,*.c,*.cc,*.cpp call Formatonsave()
