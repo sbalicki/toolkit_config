@@ -101,10 +101,14 @@ if ! hash ctags 2>/dev/null; then
   printf "${GREEN}Installing ctags\n${NORMAL}"
   sudo apt install ctags -y
 fi
-# Download clang-format.py for vim
+# Download clang-format.py for vim and install vim python support
 if [ ! -f $HOME/clang-format.py ]; then
   printf "${GREEN}Downloading clang-format.py for VIM\n${NORMAL}"
   curl -LSso $HOME/clang-format.py https://llvm.org/svn/llvm-project/cfe/trunk/tools/clang-format/clang-format.py
+fi
+if ! hash vim-nox 2>/dev/null; then
+  printf "${GREEN}Installing vim-nox for python support\n${NORMAL}"
+  sudo apt install vim-nox -y
 fi
 # Copy configuration file
 printf "${YELLOW}Copying prepared .vimrc to ~/.vimrc\n${NORMAL}"
