@@ -19,6 +19,15 @@ else
   NORMAL=""
 fi
 
+############ SSH ############
+if hash ssh 2>/dev/null; then
+  printf "${BLUE}SSH is already installed\n${NORMAL}"
+else
+  # Install SSH
+  printf "${GREEN}Installing SSH\n${NORMAL}"
+  sudo apt install ssh -y
+fi
+
 ########### Clang ###########
 if hash clang 2>/dev/null; then
   printf "${BLUE}Clang is already installed\n${NORMAL}"
