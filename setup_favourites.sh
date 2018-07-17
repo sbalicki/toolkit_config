@@ -23,3 +23,8 @@ fi
 printf "${GREEN}Installing favourite programs\n${NORMAL}"
 sudo apt install chromium chromium-l10n vlc gparted eclipse aptitude dconf-editor \
     mate-desktop-environment-extra mate-desktop-environment-extras -y
+
+################ Hide desktop icons ################
+gsettings set org.mate.caja.desktop home-icon-visible false
+gsettings set org.mate.caja.desktop trash-icon-visible false
+gsettings set org.mate.caja.desktop volumes-visible false
