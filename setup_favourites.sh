@@ -21,5 +21,5 @@ fi
 
 ############ Install favourite programs ############
 printf "${GREEN}Installing favourite programs\n${NORMAL}"
-sudo apt install chromium chromium-l10n vlc gparted eclipse aptitude dconf \
+sudo apt install chromium chromium-l10n vlc gparted eclipse aptitude dconf-editor \
     mate-desktop-environment-extra mate-desktop-environment-extras -y
