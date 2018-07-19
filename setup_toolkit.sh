@@ -70,6 +70,8 @@ git config --global merge.tool meld
 git config --global diff.tool meld
 
 ############ VIM ############
+VIM_BUNDLE=~/.vim/bundle
+VIM_AUTOLOAD=~/.vim/autoload
 # Check if VIM is installed
 if hash vim 2>/dev/null; then
   printf "${BLUE}VIM is already installed\n${NORMAL}"
@@ -78,15 +80,28 @@ else
   printf "${GREEN}Installing VIM\n${NORMAL}"
   sudo apt install vim vim-nox -y
 fi
+# Create .vim/bundle directory
+[ ! -d $VIM_BUNDLE ] && mkdir -p $VIM_BUNDLE
+# Download and install YouCompleteMe
+if [ -d $VIM_BUNDLE/YouCompleteMe ]; then
+  printf "${BLUE}VIM YouCompleteMe is already installed\n${NORMAL}"
+else
+  printf "${GREEN}Installing VIM YouCompleteMe\n${NORMAL}"
+  git clone https://github.com/Valloric/YouCompleteMe.git ${VIM_BUNDLE}/YouCompleteMe ||
+      {
+      printf "${RED}Error: git clone of YouCompleteMe repo failed\n${NORMAL}"
+      exit 1
+      }
+  cd ${VIM_BUNDLE}/YouCompleteMe
+  git submodule update --init --recursive
+  cd -
+  ${VIM_BUNDLE}/YouCompleteMe/install.py --clang-completer --java-completer
+fi
 # Download and install solarized color theme with pathogen plugin
-VIM_BUNDLE=~/.vim/bundle
-VIM_AUTOLOAD=~/.vim/autoload
-
 if [ -d $VIM_BUNDLE/vim-colors-solarized ]; then
   printf "${BLUE}VIM Solarized Colors theme is already installed\n${NORMAL}"
 else
   printf "${GREEN}Installing VIM Solarized Colors theme\n${NORMAL}"
-  [ -d $VIM_BUNDLE ] || mkdir -p $VIM_BUNDLE
   git clone git://github.com/altercation/vim-colors-solarized.git $VIM_BUNDLE/vim-colors-solarized || {
     printf "${RED}Error: git clone of vim-colors-solarized repo failed\n${NORMAL}"
     exit 1
