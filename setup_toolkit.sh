@@ -162,6 +162,10 @@ else
   }
 fi
 # Copy configuration file
+if [ -f ~/.zshrc ]; then
+  printf "${GREEN}Moving ~/.zshrc to ~/.zshrc_old\n${NORMAL}"
+  mv ~/.zshrc ~/.zshrc_old
+fi
 printf "${YELLOW}Copying prepared .zshrc to ~/.zshrc\n${NORMAL}"
 cp .zshrc ~/
 sed "/^export ZSH=/ c\\
