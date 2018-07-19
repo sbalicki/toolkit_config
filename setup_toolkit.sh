@@ -134,9 +134,11 @@ if dpkg-query vim-nox &>/dev/null; then
   printf "${GREEN}Installing vim-nox for python support\n${NORMAL}"
   sudo apt install vim-nox -y
 fi
-# Copy configuration file
+# Copy configuration files
 printf "${YELLOW}Copying prepared .vimrc to ~/.vimrc\n${NORMAL}"
 cp .vimrc ~/
+printf "${YELLOW}Copying prepared .ycm_extra_conf.py to ~/.vim/.ycm_extra_conf.py\n${NORMAL}"
+cp .ycm_extra_conf.py ~/.vim/.ycm_extra_conf.py
 
 ############ oh-my-zsh ############
 # Check if zsh is installed
