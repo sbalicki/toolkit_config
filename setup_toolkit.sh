@@ -78,7 +78,7 @@ if hash vim 2>/dev/null; then
 else
   # Install vim
   printf "${GREEN}Installing VIM\n${NORMAL}"
-  sudo apt install vim vim-nox -y
+  sudo apt install vim -y
 fi
 # Create .vim/bundle directory
 [ ! -d $VIM_BUNDLE ] && mkdir -p $VIM_BUNDLE
@@ -130,7 +130,7 @@ if [ ! -f $HOME/clang-format.py ]; then
   printf "${GREEN}Downloading clang-format.py for VIM\n${NORMAL}"
   curl -LSso $HOME/clang-format.py https://llvm.org/svn/llvm-project/cfe/trunk/tools/clang-format/clang-format.py
 fi
-if ! hash vim-nox 2>/dev/null; then
+if dpkg-query vim-nox &>/dev/null; then
   printf "${GREEN}Installing vim-nox for python support\n${NORMAL}"
   sudo apt install vim-nox -y
 fi
