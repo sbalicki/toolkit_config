@@ -73,3 +73,17 @@ let g:ycm_error_symbol = '->'
 " let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration
 let g:ycm_server_use_stdout = 1
+
+" Occurences highlighting
+let g:no_highlight_group_for_current_word=["Statement", "Comment", "Type", "PreProc"]
+function s:HighlightWordUnderCursor()
+  let l:syntaxgroup = synIDattr(synIDtrans(synID(line("."), stridx(getline("."), expand('<cword>')) + 1, 1)), "name")
+
+  if (index(g:no_highlight_group_for_current_word, l:syntaxgroup) == -1)
+    exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+  else
+    exe 'match IncSearch /\V\<\>/'
+  endif
+endfunction
+
+autocmd CursorMoved * call s:HighlightWordUnderCursor()
