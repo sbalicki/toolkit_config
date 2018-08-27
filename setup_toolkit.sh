@@ -130,7 +130,7 @@ if [ ! -f $HOME/clang-format.py ]; then
   printf "${GREEN}Downloading clang-format.py for VIM\n${NORMAL}"
   curl -LSso $HOME/clang-format.py https://llvm.org/svn/llvm-project/cfe/trunk/tools/clang-format/clang-format.py
 fi
-if dpkg-query vim-nox &>/dev/null; then
+if ! dpkg-query -s vim-nox &>/dev/null; then
   printf "${GREEN}Installing vim-nox for python support\n${NORMAL}"
   sudo apt install vim-nox -y
 fi
