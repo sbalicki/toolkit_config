@@ -19,6 +19,9 @@ else
   NORMAL=""
 fi
 
+# Get CPU jobs count
+JOBS=`grep -c '^processor' /proc/cpuinfo`
+
 ############ SSH ############
 if hash ssh 2>/dev/null; then
   printf "${BLUE}SSH is already installed\n${NORMAL}"
@@ -28,6 +31,15 @@ else
   sudo apt install ssh -y
 fi
 
+# Genereta ssh public key and ask about gerrit setup
+if [ -f ~/.ssh/id_rsa.pub ]; then
+  printf "${BLUE}Found SSH public key in ~/.ssh/id_rsa.pub\n${NORMAL}"
+else
+  printf "${GREEN}Generating SSH public key.\n${NORMAL}"
+  ssh-keygen -t rsa -C "${HERE_EMAIL}" -q -N ""
+fi
+cat ~/.ssh/id_rsa.pub
+
 ########### Clang ###########
 if hash clang 2>/dev/null; then
   printf "${BLUE}Clang is already installed\n${NORMAL}"
@@ -35,6 +47,24 @@ else
   # Install clang
   printf "${GREEN}Installing clang\n${NORMAL}"
   sudo apt install clang clang-format clang-tidy -y
+fi
+
+########### CMake ###########
+version=`hash cmake 2>/dev/null && cmake --version | grep version | sed 's/.*version //'`
+cmake_url="cmake.org`wget -q -O - cmake.org/download | grep -Po '(?<=href=")[^"]*(?=")' | grep tar.gz | head -1`"
+if [ ${version} = *3.12.0* ]; then # TODO: This check needs to be improved
+  hash cmake 2>/dev/null && sudo apt purge --auto-remove cmake
+  printf "${YELLOW}Downloading and installing newest CMake\n${NORMAL}"
+  [ ! -f /tmp/cmake.tar.gz ] && wget ${cmake_url} -O /tmp/cmake.tar.gz
+  mkdir -p /tmp/cmake && tar -xzf /tmp/cmake.tar.gz -C /tmp/cmake --strip-components=1
+  pushd /tmp/cmake
+  ./bootstrap
+  make -j${JOBS}
+  sudo make install 
+  popd
+  rm -rf /tmp/cmake /tmp/cmake.tar.gz
+  else
+  printf "${BLUE}Skipping installation of CMake - found version ${version}\n${NORMAL}"
 fi
 
 ############ GIT ############
@@ -163,6 +193,47 @@ else
     exit 1
   }
 fi
+
+######## Android SDK #########
+# Add export entries for Android SDK
+current_android_home=`find_user_data "ANDROID_HOME"`
+if [ -z "${current_android_home}" ]; then
+  echo '# Export Android SDK paths' >> ${RC_FILE_PATH}
+  echo 'export ANDROID_HOME='${ANDROID_HOME} >> ${RC_FILE_PATH}
+  echo 'export ANDROID_NDK_HOME='${ANDROID_HOME}'/ndk-bundle' >> ${RC_FILE_PATH}
+  echo 'export SDK_ROOT=${ANDROID_HOME}' >> ${RC_FILE_PATH}
+  echo 'export NDK_ROOT=${ANDROID_NDK_HOME}' >> ${RC_FILE_PATH}
+  echo 'export PATH=${PATH}:${ANDROID_HOME}/tools' >> ${RC_FILE_PATH}
+  echo 'export PATH=${PATH}:${ANDROID_HOME}/platform-tools' >> ${RC_FILE_PATH}
+else
+  printf "${BLUE}Found Android SDK entries for path ${current_android_home}\n${NORMAL}"
+fi
+
+# Download Android SDK
+if [ ! -d ${ANDROID_HOME} ]; then
+  printf "${YELLOW}Downloading and installing Android SDK in ${ANDROID_HOME}\n${NORMAL}"
+  android_sdk_url=`wget -q -O - https://developer.android.com/studio | grep -Po '(?<=href=")[^"]*(?=")' | grep sdk-tools-linux | head -1`
+  [ ! -f /tmp/android_sdk.zip ] && wget ${android_sdk_url} -O /tmp/android_sdk.zip
+  mkdir -p ${ANDROID_HOME} && unzip -qq /tmp/android_sdk.zip -d ${ANDROID_HOME}
+  rm /tmp/android_sdk.zip
+else
+  printf "${BLUE}Skipping installation of Android SDK - found in ${ANDROID_HOME}\n${NORMAL}"
+fi
+# Install packages
+yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
+${ANDROID_HOME}/tools/bin/sdkmanager "platform-tools" "emulator" "ndk-bundle" "build-tools;28.0.1" "lldb;3.1"
+
+######## Android Studio #########
+if [ ! -f ${ANDROID_STUDIO_HOME}/bin/studio.sh ]; then 
+  printf "${YELLOW}Downloading and installing Android Studio in ${ANDROID_STUDIO_HOME}\n${NORMAL}"
+  android_studio_url=`wget -q -O - https://developer.android.com/studio | grep -Po '(?<=href=")[^"]*(?=")' | grep linux.zip | head -1`
+  [ ! -f /tmp/android_studio.zip ] && wget ${android_studio_url} -O /tmp/android_studio.zip
+  unzip -qq /tmp/android_studio.zip -d ~/
+  rm /tmp/android_studio.zip
+else
+  printf "${BLUE}Skipping installation of Android Studio - found in ${ANDROID_STUDIO_HOME}\n${NORMAL}"
+fi
+
 # Copy configuration file
 if [ -f ~/.zshrc ]; then
   printf "${GREEN}Moving ~/.zshrc to ~/.zshrc_old\n${NORMAL}"
