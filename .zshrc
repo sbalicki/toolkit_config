@@ -92,3 +92,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Unset terminal screen restoring after less
+unset LESS
+# Hide username
+prompt_context() {}
